@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <title></title>
+</head>
+<body>
+      <form action = "#" id = "isfire">
+         <label for="image" > Insert image</label>
+         <input type="file" id="image" name="image" onchange = "previewFile()" required = true accept="image/* "><br>         
+         <button type="submit" class="btn btn-primary ">Submit</button>
+         <div id="imgs" style="display: none;"></div>
+      </form>   
+   </body>
+</html>
+
+<script>
+   const form = document.getElementById('isfire')
+   form.addEventListener('submit', insertednews)
+   function previewFile() {
+        var filesSelected = document.getElementById("image").files;
+        if (filesSelected.length > 0) {
+        var fileToLoad = filesSelected[0];
+
+        var fileReader = new FileReader();
+
+        fileReader.onload = function(fileLoadedEvent) {
+            var srcData = fileLoadedEvent.target.result; // <--- data: base64
+
+            var newImage = document.createElement('img');
+            newImage.src = srcData;
+            console.log(newImage.src);
+            document.getElementById("imgs").innerHTML = newImage.src;
+            // alert("Converted Base64 version is " + document.getElementById("imgs").innerHTML);
+            // console.log("Converted Base64 version is " + document.getElementById("imgs").innerHTML);
+        }
+        fileReader.readAsDataURL(fileToLoad);
+        }
+    }
+    async function insertednews(event) {
+            event.preventDefault()
+            //     const image = document.getElementById("imgs").innerHTML
+            //     // console.log(image)
+            // const result = await fetch('http://localhost:7777/fire', {
+            //    method: 'POST',
+            //    headers: {
+            //       'Content-Type': 'application/json'
+            //    },
+            //    body: JSON.stringify({
+            //       image
+            //    })
+            // }).then((res) => res.json())
+            const image = document.getElementById("imgs").innerHTML
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "http://localhost:7777/fire", true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify({
+               image: image
+            }));
+         }    
+
+</script>
+<!-- http://localhost:7777/fire -->
